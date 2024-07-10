@@ -1,12 +1,14 @@
-from django.test import TestCase ,Client
+from django.test import TestCase, Client
 from django.utils import timezone
 from datetime import datetime
 from todo.models import Task
 
 # Create your tests here.
+
 class SampleTestCase(TestCase):
     def test_sample1(self):
         self.assertEqual(1 + 2, 3)
+
 
 class TaskModelTestCase(TestCase):
     def test_create_task1(self):
@@ -44,9 +46,10 @@ class TaskModelTestCase(TestCase):
 
     def test_is_overdue_none(self):
         current = timezone.make_aware(datetime(2024, 7, 1, 0, 0, 0))
-        task=Task(title="task3", due_at=None) 
+        task=Task(title="task3", due_at=None)
         task.save()
         self.assertFalse(task.is_overdue(current))
+
 
 class TodoViewTestCase(TestCase):
     def test_index_get(self):
