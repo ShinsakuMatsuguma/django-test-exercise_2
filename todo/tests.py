@@ -68,6 +68,18 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(response.templates[0].name, 'todo/index.html')
         self.assertEqual(len(response.context['tasks']), 1)
 
+    def test_index_get_order_post(self):
+        task1 = Task(title='Task1',due_at=timezone.make_aware(datetime(2024, 6, 30,23,59,59)))
+        task1.save()
+        task2 = Task(title='Task2',due_at=timezone.make_aware(datetime(2024, 6, 29,23,59,59)))
+        task2.save()
+        client = client()
+        response = client.get('/?order=post')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'todo/index.html')
+        self.assertEqual(response.context['tasks'][0].title, task2)
+        self.assertEqual(response.context['tasks'][1].title, task1)
     def test_index_get_order_due(self):
         task1 = Task(title='Task1',due_at=timezone.make_aware(datetime(2024, 7, 1)))
         task1.save()
@@ -78,5 +90,5 @@ class TodoViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.templates[0].name, 'todo/index.html')
-        self.assertEqual(response.context['tasks'][0].title, task2)
-        self.assertEqual(response.context['tasks'][1].title, task1)
+        self.assertEqual(response.context['tasks'][0].title, task1)
+        self.assertEqual(response.context['tasks'][1].title, task2)
